@@ -1743,8 +1743,8 @@ SERIALISE_VK_HANDLES();
   PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)                            \
   PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR)                  \
   PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR)                        \
-  PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR)               \
-  PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR)             \
+  PNEXT_STRUCT(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR, VkPhysicalDeviceRayTracingPipelineFeaturesKHR)               \
+  PNEXT_STRUCT(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR, VkPhysicalDeviceRayTracingPipelinePropertiesKHR)             \
                                                                                                        \
   /* VK_KHR_ray_tracing_position_fetch */                                                              \
   PNEXT_UNSUPPORTED(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR)         \
@@ -12140,6 +12140,38 @@ void Deserialise(const VkPhysicalDeviceRayQueryFeaturesKHR &el)
   DeserialiseNext(el.pNext);
 }
 
+template <typename SerialiserType>
+void DoSerialise(SerialiserType &ser, VkPhysicalDeviceRayTracingPipelineFeaturesKHR &el)
+{
+  RDCASSERT(ser.IsReading() || el.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR);
+  SerialiseNext(ser, el.sType, el.pNext);
+
+  SERIALISE_MEMBER(rayTracingPipeline);
+  SERIALISE_MEMBER(rayTracingPipelineShaderGroupHandleCaptureReplay);
+  SERIALISE_MEMBER(rayTracingPipelineShaderGroupHandleCaptureReplayMixed);
+  SERIALISE_MEMBER(rayTracingPipelineTraceRaysIndirect);
+  SERIALISE_MEMBER(rayTraversalPrimitiveCulling);
+}
+
+template <>
+void Deserialise(const VkPhysicalDeviceRayTracingPipelineFeaturesKHR &el)
+{
+  DeserialiseNext(el.pNext);
+}
+
+template <typename SerialiserType>
+void DoSerialise(SerialiserType &ser, VkPhysicalDeviceRayTracingPipelinePropertiesKHR &el)
+{
+  RDCASSERT(ser.IsReading() || el.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR);
+  SerialiseNext(ser, el.sType, el.pNext);
+}
+
+template <>
+void Deserialise(const VkPhysicalDeviceRayTracingPipelinePropertiesKHR &el)
+{
+  DeserialiseNext(el.pNext);
+}
+
 // pNext structs - always have deserialise for the next chain
 INSTANTIATE_SERIALISE_TYPE(VkAccelerationStructureBuildGeometryInfoKHR);
 INSTANTIATE_SERIALISE_TYPE(VkAccelerationStructureBuildSizesInfoKHR);
@@ -12405,6 +12437,8 @@ INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceProtectedMemoryProperties);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDevicePushDescriptorPropertiesKHR);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRayQueryFeaturesKHR);
+INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRayTracingPipelineFeaturesKHR);
+INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRayTracingPipelinePropertiesKHR);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRobustness2FeaturesEXT);
 INSTANTIATE_SERIALISE_TYPE(VkPhysicalDeviceRobustness2PropertiesEXT);
